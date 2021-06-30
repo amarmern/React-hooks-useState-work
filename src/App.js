@@ -1,5 +1,5 @@
 import "./styles.css";
-import React from "react";
+import React, { Fragment } from "react";
 const todosItem = [
   { id: 1, text: "Wash dishes", done: true },
   { id: 2, text: "Do laundry", done: false },
@@ -19,16 +19,18 @@ function TodoList({ todos }) {
   return (
     <ul>
       {todos.map((todo) => (
-        <>
-          <input type="checkbox" value={todo.done} checked={todo.done} />
+        <Fragment key={todo.id}>
+          <input type="checkbox" value={todo.done} defaultChecked={todo.done} />
           <li key={todo.id}> {todo.text} </li>
-        </>
+        </Fragment>
       ))}
     </ul>
   );
 }
 
 function AddTodo({ setTodos }) {
+  const inputRef = React.useRef();
+
   function handleAddTodo(e) {
     e.preventDefault();
     const text = e.target.elements.addTodo.value;
@@ -41,11 +43,17 @@ function AddTodo({ setTodos }) {
     setTodos((prevTodos) => {
       return prevTodos.concat(todo);
     });
+    inputRef.current.value = "";
   }
 
   return (
     <form onSubmit={handleAddTodo}>
-      <input type="text" name="addTodo" placeholder="Add To Do" />
+      <input
+        type="text"
+        name="addTodo"
+        placeholder="Add To Do"
+        ref={inputRef}
+      />
       <button type="submit"> Submit </button>
     </form>
   );
